@@ -50,7 +50,8 @@ app.get('/api/courses/:id', async (req, res) => {
 app.post('/api/courses', async (req, res) => {
     try {
         const course = {
-            name: req.body.name
+            name: req.body.name,
+            code: req.body.code
         };
         const query = 'INSERT INTO courses SET ?';
         const params = [course];
@@ -64,9 +65,10 @@ app.post('/api/courses', async (req, res) => {
 // update an existing course
 app.put('/api/courses/:id', async (req, res) => {
     try {
-        const query = 'UPDATE courses SET name=? WHERE id=?';
+        const query = 'UPDATE courses SET name=?, code=? WHERE id=?';
         const params = [
             req.body.name,
+            req.body.code,
             parseInt(req.params.id)
         ];
         const result = await executeQuery(query, params);
