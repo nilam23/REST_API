@@ -62,7 +62,7 @@ app.post('/api/courses', async (req, res) => {
     }
 });
 
-// update an existing course
+// update an existing course (PUT)
 app.put('/api/courses/:id', async (req, res) => {
     try {
         const query = 'UPDATE courses SET name=?, code=? WHERE id=?';
@@ -80,6 +80,30 @@ app.put('/api/courses/:id', async (req, res) => {
     }
 });
 
+// update an existing course (PATCH)
+app.patch('/api/courses/:id', async (req, res) => {
+    try {
+        const params = [];
+        const queryKeys = [];
+        Object.keys(req.body).forEach(key => {
+            queryKeys.push(key);
+            params.push(req.body[key]);
+        });
+        var query = `UPDATE courses SET `;
+        queryKeys.forEach(key => {
+            query += `${key}=? `;
+        });
+        query +=  'WHERE id=?';
+        params.push(parseInt(req.params.id));
+        const result = await executeQuery(query, params);
+        if(!result.affectedRows)
+            return res.send('Course not found.');
+        return res.redirect('/api/courses');
+    } catch (error) {
+        console.log(error);
+    }
+});
+ 
 // delete an existing course
 app.delete('/api/courses/:id', async (req, res) => {
     try {
