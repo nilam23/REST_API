@@ -90,10 +90,13 @@ app.patch('/api/courses/:id', async (req, res) => {
             params.push(req.body[key]);
         });
         var query = `UPDATE courses SET `;
-        queryKeys.forEach(key => {
-            query += `${key}=? `;
+        queryKeys.forEach((key, index) => {
+            if(index < queryKeys.length-1)
+                query += `${key}=?, `;
+            else
+                query += `${key}=? `;
         });
-        query +=  'WHERE id=?';
+        query += 'WHERE id=?';
         params.push(parseInt(req.params.id));
         const result = await executeQuery(query, params);
         if(!result.affectedRows)
